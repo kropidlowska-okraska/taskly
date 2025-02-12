@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
 import { theme } from "../theme";
-import { is } from "cheerio/lib/api/traversing";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 type Props = {
   name: string;
@@ -25,12 +25,15 @@ export function ShoppingListItem({ name, isCompleted }: Props) {
         {name}
       </Text>
       <TouchableOpacity
-        style={[styles.button, isCompleted && styles.completedButton]}
         onPress={handleDelete}
         accessibilityRole="button"
         activeOpacity={0.8}
       >
-        <Text style={styles.buttonText}>Delete</Text>
+        <AntDesign
+          name="closecircle"
+          size={24}
+          color={isCompleted ? theme.colorGrey : theme.colorRed}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -40,7 +43,7 @@ const styles = StyleSheet.create({
   container: {
     borderBottomWidth: 1,
     borderBottomColor: theme.colorCerulean,
-    paddingHorizontal: 8,
+    paddingHorizontal: 18,
     paddingVertical: 16,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -51,20 +54,6 @@ const styles = StyleSheet.create({
     borderBottomColor: theme.colorLightGrey,
   },
   itemText: { fontSize: 18, fontWeight: 200 },
-  button: {
-    backgroundColor: theme.colorBlack,
-    padding: 8,
-    borderRadius: 6,
-  },
-  completedButton: {
-    backgroundColor: theme.colorGrey,
-  },
-  buttonText: {
-    color: theme.colorWhite,
-    fontWeight: "bold",
-    textTransform: "uppercase",
-    letterSpacing: 1,
-  },
   completedText: {
     textDecorationLine: "line-through",
     textDecorationColor: theme.colorGrey,
