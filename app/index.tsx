@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import { ShoppingListItem } from "./components/ShoppingListItem";
+import { ShoppingListItem } from "../components/ShoppingListItem";
 
 export default function App() {
   return (
@@ -7,6 +7,7 @@ export default function App() {
       <ShoppingListItem name="Kawa" isCompleted />
       <ShoppingListItem name="Herbata" />
       <ShoppingListItem name="Cukier" />
+      <ShoppingListItem name="Ziemniaczki" />
     </View>
   );
 }
