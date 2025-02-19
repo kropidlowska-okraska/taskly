@@ -19,6 +19,7 @@ export default function Layout() {
           tabBarIcon: ({ color, size }) => (
             <Feather name="list" size={size} color={color} />
           ),
+          headerShown: true,
         }}
       />
       <Tabs.Screen
