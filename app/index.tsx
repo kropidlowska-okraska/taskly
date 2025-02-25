@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, FlatList } from "react-native";
+import { StyleSheet, TextInput, FlatList, View, Text } from "react-native";
 import { ShoppingListItem } from "../components/ShoppingListItem";
 import { theme } from "../theme";
 import { useState } from "react";
@@ -6,14 +6,8 @@ import { useState } from "react";
 type ShoppingListItemType = {
   id: string;
   name: string;
+  completedAtTimestamp?: number;
 };
-
-const initalList: ShoppingListItemType[] = [
-  { id: "1", name: "Kawa" },
-  { id: "2", name: "Herbata" },
-  { id: "3", name: "Cukier" },
-  { id: "4", name: "Ziemniaczki" },
-];
 
 // If you want to test the performance of the FlatList component, you can use the following code:
 // Now you can console log the item in the renderItem prop to see how many components are rendered.
@@ -22,7 +16,7 @@ const initalList: ShoppingListItemType[] = [
 //   .map((_item, index) => ({ id: String(index + 1), name: String(index + 1) }));
 
 export default function App() {
-  const [shoppingList, setShoppingList] = useState(initalList);
+  const [shoppingList, setShoppingList] = useState<ShoppingListItemType[]>([]);
   const [value, setValue] = useState(" ");
 
   const handleSubmit = () => {
@@ -38,11 +32,39 @@ export default function App() {
     }
   };
 
+  const handleToggleComplete = (id: string) => {
+    const newShoppingList = shoppingList.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          completedAtTimestamp: item.completedAtTimestamp
+            ? undefined
+            : Date.now(),
+        };
+      } else {
+        return item;
+      }
+    });
+    setShoppingList(newShoppingList);
+  };
+
+  const handleDelete = (id: string) => {
+    const newShoppingList = shoppingList.filter((item) => item.id !== id);
+    setShoppingList(newShoppingList);
+  };
+
   return (
     <FlatList
       data={shoppingList}
       renderItem={({ item }) => {
-        return <ShoppingListItem name={item.name} />;
+        return (
+          <ShoppingListItem
+            name={item.name}
+            onDelete={() => handleDelete(item.id)}
+            onToggleComplete={() => handleToggleComplete(item.id)}
+            isCompleted={Boolean(item.completedAtTimestamp)}
+          />
+        );
       }}
       ListHeaderComponent={
         <TextInput
@@ -54,6 +76,11 @@ export default function App() {
           returnKeyType="done"
           onSubmitEditing={handleSubmit}
         />
+      }
+      ListEmptyComponent={
+        <View style={styles.emptyListComponent}>
+          <Text style={styles.emptyListText}>Zaplanuj sobie zakupki</Text>
+        </View>
       }
       stickyHeaderIndices={[0]}
       style={styles.container}
@@ -80,5 +107,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderRadius: 50,
     backgroundColor: theme.colorWhite,
+  },
+  emptyListComponent: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 32,
+  },
+  emptyListText: {
+    fontSize: 32,
   },
 });
