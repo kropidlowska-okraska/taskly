@@ -4,9 +4,11 @@ import {
   TouchableOpacity,
   Alert,
   Pressable,
+  View,
 } from "react-native";
 import { theme } from "../theme";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import Feather from "@expo/vector-icons/Feather";
 
 type Props = {
   name: string;
@@ -37,9 +39,19 @@ export function ShoppingListItem({
       style={[styles.container, isCompleted && styles.completedContainer]}
       onPress={onToggleComplete}
     >
-      <Text style={[styles.itemText, isCompleted && styles.completedText]}>
-        {name}
-      </Text>
+      <View style={styles.itemContainer}>
+        <Feather
+          name={isCompleted ? "check-square" : "square"}
+          size={24}
+          color={isCompleted ? theme.colorGrey : theme.colorCerulean}
+        />
+        <Text
+          numberOfLines={2}
+          style={[styles.itemText, isCompleted && styles.completedText]}
+        >
+          {name}
+        </Text>
+      </View>
       <TouchableOpacity
         onPress={handleDelete}
         accessibilityRole="button"
@@ -65,11 +77,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  itemContainer: {
+    flexDirection: "row",
+    gap: 10,
+    flex: 1,
+  },
   completedContainer: {
     backgroundColor: theme.colorLightGrey,
     borderBottomColor: theme.colorLightGrey,
   },
-  itemText: { fontSize: 18, fontWeight: 200 },
+  itemText: { fontSize: 18, fontWeight: 200, flex: 1 },
   completedText: {
     textDecorationLine: "line-through",
     textDecorationColor: theme.colorGrey,
