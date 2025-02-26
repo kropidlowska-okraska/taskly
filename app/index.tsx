@@ -7,6 +7,7 @@ type ShoppingListItemType = {
   id: string;
   name: string;
   completedAtTimestamp?: number;
+  lastUpdatedTimestamp: number;
 };
 
 // If you want to test the performance of the FlatList component, you can use the following code:
@@ -26,6 +27,7 @@ export default function App() {
         {
           id: new Date().toTimeString(),
           name: value,
+          lastUpdatedTimestamp: Date.now(),
         },
       ]);
       setValue("");
@@ -40,6 +42,7 @@ export default function App() {
           completedAtTimestamp: item.completedAtTimestamp
             ? undefined
             : Date.now(),
+          lastUpdatedTimestamp: Date.now(),
         };
       } else {
         return item;
@@ -53,9 +56,31 @@ export default function App() {
     setShoppingList(newShoppingList);
   };
 
+  function orderShoppingList(shoppingList: ShoppingListItemType[]) {
+    return shoppingList.sort((item1, item2) => {
+      if (item1.completedAtTimestamp && item2.completedAtTimestamp) {
+        return item2.completedAtTimestamp - item1.completedAtTimestamp;
+      }
+
+      if (item1.completedAtTimestamp && !item2.completedAtTimestamp) {
+        return 1;
+      }
+
+      if (!item1.completedAtTimestamp && item2.completedAtTimestamp) {
+        return -1;
+      }
+
+      if (!item1.completedAtTimestamp && !item2.completedAtTimestamp) {
+        return item2.lastUpdatedTimestamp - item1.lastUpdatedTimestamp;
+      }
+
+      return 0;
+    });
+  }
+
   return (
     <FlatList
-      data={shoppingList}
+      data={orderShoppingList(shoppingList)}
       renderItem={({ item }) => {
         return (
           <ShoppingListItem
