@@ -37,14 +37,14 @@ export default function App() {
 
   const handleSubmit = () => {
     if (value) {
-      const newShoppingList =[
+      const newShoppingList = [
         ...shoppingList,
         {
           id: new Date().toTimeString(),
           name: value,
           lastUpdatedTimestamp: Date.now(),
         },
-      ]
+      ];
 
       setShoppingList(newShoppingList);
       saveToStorage(storageKey, newShoppingList);
