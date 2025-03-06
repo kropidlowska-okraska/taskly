@@ -1,4 +1,11 @@
-import { Text, View, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import { theme } from "../../theme";
 import { registerForPushNotificationsAsync } from "../../utils/registerForPushNotificationsAsync";
 import * as Device from "expo-device";
@@ -24,6 +31,7 @@ type CountdownStatus = {
 };
 
 export default function CounterScreen() {
+  const [isLoading, setIsLoading] = useState(true);
   const [countdownState, setCountdownState] =
     useState<PersistedCountdownState>();
   const [status, setStatus] = useState<CountdownStatus>({
@@ -51,9 +59,10 @@ export default function CounterScreen() {
       const distance = intervalToDuration(
         isOverdue
           ? { start: timestamp, end: Date.now() }
-          : { start: Date.now(), end: timestamp }
+          : { start: Date.now(), end: timestamp },
       );
       setStatus({ isOverdue, distance });
+      setIsLoading(false);
     }, 1000);
 
     return () => {
@@ -79,14 +88,14 @@ export default function CounterScreen() {
       if (Device.isDevice) {
         Alert.alert(
           "Unable to schedule notfication",
-          "You need to enable notifications in your settings to use this feature."
+          "You need to enable notifications in your settings to use this feature.",
         );
       }
     }
 
     if (countdownState?.currentNotificationId) {
       await Notifications.cancelScheduledNotificationAsync(
-        countdownState.currentNotificationId
+        countdownState.currentNotificationId,
       );
     }
 
@@ -99,6 +108,14 @@ export default function CounterScreen() {
     setCountdownState(newCountdownState);
     await saveToStorage(countddownStorageKey, newCountdownState);
   };
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color={theme.colorCerulean} />
+      </View>
+    );
+  }
 
   return (
     <View
