@@ -11,16 +11,16 @@ import { registerForPushNotificationsAsync } from "../../utils/registerForPushNo
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { useEffect, useState } from "react";
-import { Duration, isBefore, intervalToDuration, set } from "date-fns";
+import { Duration, isBefore, intervalToDuration } from "date-fns";
 import { TimeSegment } from "../../components/TimeSegments";
 import { getFromStorage, saveToStorage } from "../../utils/storage";
 
 // 10 seconds
 const frequency = 10 * 1000;
 
-const countddownStorageKey = "taskly-countdown";
+export const countddownStorageKey = "taskly-countdown";
 
-type PersistedCountdownState = {
+export type PersistedCountdownState = {
   currentNotificationId: string | undefined;
   completedAtTimestamps: number[];
 };
